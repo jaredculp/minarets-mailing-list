@@ -46,6 +46,10 @@ BEGIN {
   print "\t</p>"
 }
 
+# Each message begins with "From: <email address> <date string>".
+# After the first match, all subsequent matches mean new messages.
+# This is checked by seeing if the "body" of the message is set.
+# Pagination is used to provide links for "previous" and "next" pages.
 /^From .[[:print:]]+.*[[:digit:]]{4}$/ {
   gsub("From ", "")
   if (body != "") {
@@ -68,17 +72,24 @@ BEGIN {
 
   next
 }
+# Parse the subject line. Easy.
 /^Subject:/ {
   gsub("Subject: ", "")
   subj = $0
   next
 }
+# Strip out all other headers like 'Content-Type:' and 'In-Reply-To:'.
 /[A-Za-z'-]+:/ {
   next
 }
+# Skip all lines that start with non-printable characters.
+# These are usually from multiline headers.
 /^[[:blank:]]+/ {
   next
 }
+# Everything else must be the actual message body.
+# Strip out any open and close tags at the expense of maintaining the original message.
+# Otherwise, subsequent messages are malformed in the event that the input was bad.
 // {
   gsub("<", "")
   gsub(">", "")
