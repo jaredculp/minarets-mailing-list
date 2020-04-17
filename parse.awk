@@ -16,13 +16,11 @@ function nav() {
 }
 
 function next_page() {
-  # files are 0-indexed, so the "next" page is the "current" which is 1-indexed
-  return sprintf("<a href=\"page-%02d.html\">Next</a>", curr_page)
+  return sprintf("<a href=\"page-%02d.html\">Next</a>", curr_page + 1)
 }
 
 function prev_page() {
-  # files are 0-indexed, so the "previous" page is "current" - 2 which is 1-indexed
-  return sprintf("<a href=\"page-%02d.html\">Previous</a>", curr_page - 2)
+  return sprintf("<a href=\"page-%02d.html\">Previous</a>", curr_page - 1)
 }
 
 BEGIN {
